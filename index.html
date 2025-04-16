@@ -960,7 +960,7 @@
             overflow: hidden;
         }
 
-        .video-thumbnail img {
+        .video-thumbnail img.thumbnail-img {
             position: absolute;
             top: 0;
             left: 0;
@@ -970,7 +970,7 @@
             transition: transform 0.3s ease;
         }
 
-        .video-item:hover .video-thumbnail img {
+        .video-item:hover .video-thumbnail img.thumbnail-img {
             transform: scale(1.05);
         }
 
@@ -1917,12 +1917,12 @@
             }
         ];
 
-        // 生成视频卡片HTML - 使用静态封面而不是视频元素
-        function createVideoCard(video, index) {
+        // 生成视频卡片HTML
+        function createVideoCard(video) {
             return `
-                <div class="video-item" data-video-src="${video.videoSrc}" data-index="${index}">
+                <div class="video-item" data-video-src="${video.videoSrc}">
                     <div class="video-thumbnail">
-                        <img src="${video.thumbnailSrc}" alt="${video.title}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iI2VlZWVlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7op4bpopHlsLrlr7g8L3RleHQ+PC9zdmc+'" />
+                        <img class="thumbnail-img" src="${video.thumbnailSrc}" alt="${video.title}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7lm77niYfliqDovb3lpLHotKU8L3RleHQ+PC9zdmc+'">
                         <div class="play-overlay">
                             <div class="play-button">
                                 <i class="fas fa-play"></i>
@@ -1937,89 +1937,61 @@
             `;
         }
 
-        // 创建自动封面图片
-        function generateThumbnailPlaceholders() {
-            // 这个函数会生成一些基本的占位图，如果没有实际的缩略图
-            const videoDir = "视频展/";
-            const thumbnailDir = "视频展/thumbnails/";
+        // 更新视频模态框
+        function updateVideoModal() {
+            const videoModal = document.getElementById('videoModal');
             
-            // 检查缩略图目录是否存在，不存在则创建
-            try {
-                videoData.forEach((video, index) => {
-                    if (!video.thumbnailSrc || video.thumbnailSrc.includes('thumb')) {
-                        // 使用视频数据的位置动态生成封面
-                        video.thumbnailSrc = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM0YTkwZTI7c3RvcC1vcGFjaXR5OjAuOCIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNmZjZiNmI7c3RvcC1vcGFjaXR5OjAuOCIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0idXJsKCNncmFkKSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPiR7dmlkZW8udGl0bGV9PC90ZXh0Pjx0ZXh0IHg9IjUwJSIgeT0iNjUlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+JHt2aWRlby5kZXNjcmlwdGlvbn08L3RleHQ+PHRleHQgeD0iNTAlIiB5PSI4NSUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7ngrnlh7vot7Povazmkq3mlL48L3RleHQ+PC9zdmc+`;
-                    }
-                });
-            } catch (e) {
-                console.log("自动生成缩略图时出错:", e);
-            }
+            videoModal.addEventListener('shown.bs.modal', function () {
+                const videoElement = this.querySelector('video');
+                
+                // 在模态框显示后才加载视频，避免额外的网络请求
+                if (videoElement.getAttribute('data-src')) {
+                    videoElement.querySelector('source').src = videoElement.getAttribute('data-src');
+                    videoElement.load();
+                    videoElement.play();
+                }
+            });
+            
+            // 关闭时停止并释放视频
+            videoModal.addEventListener('hide.bs.modal', function () {
+                const videoElement = this.querySelector('video');
+                videoElement.pause();
+                videoElement.currentTime = 0;
+                
+                // 清除视频源，释放资源
+                videoElement.querySelector('source').src = '';
+                videoElement.load();
+            });
         }
-
-        // 生成缩略图占位符
-        generateThumbnailPlaceholders();
 
         // 渲染视频网格
         function renderVideoGrid() {
             const videoGrid = document.querySelector('.video-grid');
-            videoGrid.innerHTML = videoData.map((video, index) => createVideoCard(video, index)).join('');
-        }
-
-        // 视频加载和播放处理
-        function setupVideoPlayback() {
-            const modal = document.getElementById('videoModal');
-            const modalVideo = modal.querySelector('video');
-            const modalTitle = modal.querySelector('.modal-title');
+            videoGrid.innerHTML = videoData.map(video => createVideoCard(video)).join('');
             
-            // 监听视频网格点击
-            document.querySelector('.video-grid').addEventListener('click', (e) => {
-                const videoItem = e.target.closest('.video-item');
-                if (!videoItem) return;
-                
-                const videoSrc = videoItem.dataset.videoSrc;
-                const videoIndex = parseInt(videoItem.dataset.index);
-                const video = videoData[videoIndex];
-                
-                // 设置模态框内容
-                modalTitle.textContent = video.title;
-                
-                // 重要：只在用户点击时设置视频源，不要预加载
-                const videoSource = modalVideo.querySelector('source');
-                videoSource.src = videoSrc;
-                
-                // 加载视频以准备播放
-                modalVideo.load();
-                
-                // 显示模态框
-                const bsModal = new bootstrap.Modal(modal);
-                bsModal.show();
-                
-                // 在模态框显示后自动播放视频
-                modal.addEventListener('shown.bs.modal', function onShown() {
-                    modalVideo.play().catch(e => console.error('自动播放失败:', e));
-                    modal.removeEventListener('shown.bs.modal', onShown);
-                }, { once: true });
-            });
-            
-            // 关闭模态框时暂停视频
-            modal.addEventListener('hidden.bs.modal', function () {
-                modalVideo.pause();
-                modalVideo.currentTime = 0;
-                
-                // 清除视频源，减少内存占用
-                setTimeout(() => {
-                    modalVideo.querySelector('source').src = '';
-                    modalVideo.load();
-                }, 300);
+            // 添加视频点击事件
+            document.querySelectorAll('.video-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+                    const modalTitle = document.querySelector('#videoModal .modal-title');
+                    const modalVideo = document.querySelector('#videoModal video');
+                    
+                    modalTitle.textContent = this.querySelector('.video-title').textContent;
+                    
+                    // 设置data-src属性，但不立即加载
+                    modalVideo.setAttribute('data-src', this.dataset.videoSrc);
+                    
+                    modal.show();
+                });
             });
         }
 
-        // 页面加载完成后初始化
+        // 页面加载完成后渲染视频
         document.addEventListener('DOMContentLoaded', () => {
             renderVideoGrid();
-            setupVideoPlayback();
+            updateVideoModal();
             
-            // 隐藏加载动画
+            // 加载动画
             setTimeout(() => {
                 document.querySelector('.loading').classList.add('hidden');
             }, 500);
