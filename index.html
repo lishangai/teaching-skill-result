@@ -272,13 +272,15 @@
         }
 
         .modal-body {
-            padding: 30px;
+            padding: 20px;
         }
 
         .modal-body img {
-            max-height: 70vh;
+            max-height: 60vh;
             width: auto;
             margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .modal-body h4 {
@@ -290,6 +292,79 @@
             .modal-body {
                 padding: 15px;
             }
+        }
+
+        .like-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .like-button:hover {
+            transform: scale(1.1);
+        }
+
+        .like-button.liked {
+            color: #e74c3c;
+        }
+
+        .like-button i {
+            font-size: 1.1em;
+        }
+
+        .like-count {
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .radar-item {
+            position: relative;
+            padding-bottom: 40px; /* 为点赞按钮留出空间 */
+        }
+
+        .image-container {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .image-slider {
+            display: flex;
+            transition: transform 0.5s ease;
+            width: 200%;
+        }
+
+        .radar-view, .original-view {
+            width: 50%;
+            flex-shrink: 0;
+            text-align: center;
+            padding: 0 15px;
+        }
+
+        .image-slider.show-original {
+            transform: translateX(-50%);
+        }
+
+        .switch-view-buttons {
+            text-align: center;
+        }
+
+        .view-toggle {
+            transition: all 0.3s ease;
+        }
+
+        .view-toggle.showing-original {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
         }
     </style>
 </head>
@@ -375,102 +450,202 @@
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="郑洋莹" data-image="原始数据/radar_郑洋莹.png">
                     <img src="原始数据/radar_郑洋莹.png" alt="郑洋莹的雷达图">
                     <p>郑洋莹</p>
+                    <div class="like-button" data-id="郑洋莹">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="郑启晗" data-image="原始数据/radar_郑启晗.png">
                     <img src="原始数据/radar_郑启晗.png" alt="郑启晗的雷达图">
                     <p>郑启晗</p>
+                    <div class="like-button" data-id="郑启晗">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="赵文彦" data-image="原始数据/radar_赵文彦.png">
                     <img src="原始数据/radar_赵文彦.png" alt="赵文彦的雷达图">
                     <p>赵文彦</p>
+                    <div class="like-button" data-id="赵文彦">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="刘慎之" data-image="原始数据/radar_刘慎之.png">
                     <img src="原始数据/radar_刘慎之.png" alt="刘慎之的雷达图">
                     <p>刘慎之</p>
+                    <div class="like-button" data-id="刘慎之">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="谢明姝" data-image="原始数据/radar_谢明姝.png">
                     <img src="原始数据/radar_谢明姝.png" alt="谢明姝的雷达图">
                     <p>谢明姝</p>
+                    <div class="like-button" data-id="谢明姝">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="王灏然" data-image="原始数据/radar_王灏然.png">
                     <img src="原始数据/radar_王灏然.png" alt="王灏然的雷达图">
                     <p>王灏然</p>
+                    <div class="like-button" data-id="王灏然">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="吐玛尔" data-image="原始数据/radar_吐玛尔.png">
                     <img src="原始数据/radar_吐玛尔.png" alt="吐玛尔的雷达图">
                     <p>吐玛尔</p>
+                    <div class="like-button" data-id="吐玛尔">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="沈飞阳" data-image="原始数据/radar_沈飞阳.png">
                     <img src="原始数据/radar_沈飞阳.png" alt="沈飞阳的雷达图">
                     <p>沈飞阳</p>
+                    <div class="like-button" data-id="沈飞阳">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="森达尔" data-image="原始数据/radar_森达尔.png">
                     <img src="原始数据/radar_森达尔.png" alt="森达尔的雷达图">
                     <p>森达尔</p>
+                    <div class="like-button" data-id="森达尔">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="罗泰" data-image="原始数据/radar_罗泰.png">
                     <img src="原始数据/radar_罗泰.png" alt="罗泰的雷达图">
                     <p>罗泰</p>
+                    <div class="like-button" data-id="罗泰">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="罗钧芳" data-image="原始数据/radar_罗钧芳.png">
                     <img src="原始数据/radar_罗钧芳.png" alt="罗钧芳的雷达图">
                     <p>罗钧芳</p>
+                    <div class="like-button" data-id="罗钧芳">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="刘琰伟" data-image="原始数据/radar_刘琰伟.png">
                     <img src="原始数据/radar_刘琰伟.png" alt="刘琰伟的雷达图">
                     <p>刘琰伟</p>
+                    <div class="like-button" data-id="刘琰伟">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="刘柯" data-image="原始数据/radar_刘柯.png">
                     <img src="原始数据/radar_刘柯.png" alt="刘柯的雷达图">
                     <p>刘柯</p>
+                    <div class="like-button" data-id="刘柯">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="刘浩楠" data-image="原始数据/radar_刘浩楠.png">
                     <img src="原始数据/radar_刘浩楠.png" alt="刘浩楠的雷达图">
                     <p>刘浩楠</p>
+                    <div class="like-button" data-id="刘浩楠">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="李炘珂" data-image="原始数据/radar_李炘珂.png">
                     <img src="原始数据/radar_李炘珂.png" alt="李炘珂的雷达图">
                     <p>李炘珂</p>
+                    <div class="like-button" data-id="李炘珂">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="李尚艾" data-image="原始数据/radar_李尚艾.png">
                     <img src="原始数据/radar_李尚艾.png" alt="李尚艾的雷达图">
                     <p>李尚艾</p>
+                    <div class="like-button" data-id="李尚艾">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="蒋文峰" data-image="原始数据/radar_蒋文峰.png">
                     <img src="原始数据/radar_蒋文峰.png" alt="蒋文峰的雷达图">
                     <p>蒋文峰</p>
+                    <div class="like-button" data-id="蒋文峰">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="黄滢滢" data-image="原始数据/radar_黄滢滢.png">
                     <img src="原始数据/radar_黄滢滢.png" alt="黄滢滢的雷达图">
                     <p>黄滢滢</p>
+                    <div class="like-button" data-id="黄滢滢">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="胡逸凡" data-image="原始数据/radar_胡逸凡.png">
                     <img src="原始数据/radar_胡逸凡.png" alt="胡逸凡的雷达图">
                     <p>胡逸凡</p>
+                    <div class="like-button" data-id="胡逸凡">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="胡绪波" data-image="原始数据/radar_胡绪波.png">
                     <img src="原始数据/radar_胡绪波.png" alt="胡绪波的雷达图">
                     <p>胡绪波</p>
+                    <div class="like-button" data-id="胡绪波">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="郭昱彤" data-image="原始数据/radar_郭昱彤.png">
                     <img src="原始数据/radar_郭昱彤.png" alt="郭昱彤的雷达图">
                     <p>郭昱彤</p>
+                    <div class="like-button" data-id="郭昱彤">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="付僇丁" data-image="原始数据/radar_付僇丁.png">
                     <img src="原始数据/radar_付僇丁.png" alt="付僇丁的雷达图">
                     <p>付僇丁</p>
+                    <div class="like-button" data-id="付僇丁">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="邓茜" data-image="原始数据/radar_邓茜.png">
                     <img src="原始数据/radar_邓茜.png" alt="邓茜的雷达图">
                     <p>邓茜</p>
+                    <div class="like-button" data-id="邓茜">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="陈尹韵" data-image="原始数据/radar_陈尹韵.png">
                     <img src="原始数据/radar_陈尹韵.png" alt="陈尹韵的雷达图">
                     <p>陈尹韵</p>
+                    <div class="like-button" data-id="陈尹韵">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
                 <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="阿依萨娜" data-image="原始数据/radar_阿依萨娜.png">
                     <img src="原始数据/radar_阿依萨娜.png" alt="阿依萨娜的雷达图">
                     <p>阿依萨娜</p>
+                    <div class="like-button" data-id="阿依萨娜">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -484,9 +659,25 @@
                     <h5 class="modal-title" id="radarModalLabel">雷达图详情</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body text-center">
-                    <img id="modalRadarImage" src="" alt="" class="img-fluid">
-                    <h4 id="modalRadarName" class="mt-3"></h4>
+                <div class="modal-body">
+                    <div class="image-container">
+                        <div class="image-slider">
+                            <div class="radar-view">
+                                <img id="modalRadarImage" src="" alt="" class="img-fluid">
+                                <h4 id="modalRadarName" class="mt-3"></h4>
+                            </div>
+                            <div class="original-view">
+                                <img id="modalOriginalImage" src="" alt="" class="img-fluid">
+                                <h4 class="mt-3">原始画作</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="switch-view-buttons mt-3">
+                        <button class="btn btn-primary view-toggle">
+                            <i class="fas fa-image"></i>
+                            <span>查看原始画作</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -536,18 +727,134 @@
             radarModal.addEventListener('show.bs.modal', function (event) {
                 const button = event.relatedTarget;
                 const name = button.getAttribute('data-name');
-                const image = button.getAttribute('data-image');
+                const radarImage = button.getAttribute('data-image');
+                
+                // 根据姓名获取对应的文件扩展名
+                const fileExtensions = {
+                    '阿依萨娜': 'png',
+                    '陈尹韵': 'jpeg',
+                    '邓茜': 'jpg',
+                    '付僇丁': 'jpeg',
+                    '郭昱彤': 'jpg',
+                    '胡绪波': 'jpg',
+                    '胡逸凡': 'jpeg',
+                    '黄滢滢': 'jpeg',
+                    '蒋文峰': 'jpg',
+                    '李尚艾': 'jpg',
+                    '李炘珂': 'jpeg',
+                    '刘浩楠': 'png',
+                    '刘柯': 'jpg', // 注意：文件名是 刘柯1.jpg
+                    '刘慎之': 'jpeg',
+                    '刘琰伟': 'png',
+                    '罗钧芳': 'jpeg',
+                    '罗泰': 'jpeg',
+                    '森达尔': 'jpg',
+                    '沈飞阳': 'png',
+                    '吐玛尔': 'jpeg',
+                    '王灏然': 'jpg',
+                    '谢明姝': 'jpg',
+                    '赵文彦': 'png',
+                    '郑启晗': 'jpeg',
+                    '郑洋莹': 'png'
+                };
+
+                // 特殊处理刘柯的情况
+                const originalImage = name === '刘柯' 
+                    ? `基础医学/刘柯1.jpg`
+                    : `基础医学/${name}.${fileExtensions[name]}`;
                 
                 const modalTitle = radarModal.querySelector('.modal-title');
-                const modalImage = radarModal.querySelector('#modalRadarImage');
+                const modalRadarImage = radarModal.querySelector('#modalRadarImage');
+                const modalOriginalImage = radarModal.querySelector('#modalOriginalImage');
                 const modalName = radarModal.querySelector('#modalRadarName');
+                const viewToggle = radarModal.querySelector('.view-toggle');
+                const imageSlider = radarModal.querySelector('.image-slider');
                 
-                modalTitle.textContent = `${name}的雷达图分析`;
-                modalImage.src = image;
-                modalImage.alt = `${name}的雷达图`;
+                modalTitle.textContent = `${name}的分析`;
+                modalRadarImage.src = radarImage;
+                modalOriginalImage.src = originalImage;
+                modalRadarImage.alt = `${name}的雷达图`;
+                modalOriginalImage.alt = `${name}的原始画作`;
                 modalName.textContent = name;
+
+                // 添加图片加载错误处理
+                modalOriginalImage.onerror = function() {
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7lm77niYfliqDovb3lpLHotKU8L3RleHQ+PC9zdmc+';
+                    console.error(`Failed to load image for ${name}`);
+                };
+
+                // 重置视图状态
+                imageSlider.classList.remove('show-original');
+                viewToggle.classList.remove('showing-original');
+                viewToggle.querySelector('span').textContent = '查看原始画作';
+            });
+
+            // 切换视图按钮
+            const viewToggle = radarModal.querySelector('.view-toggle');
+            const imageSlider = radarModal.querySelector('.image-slider');
+            
+            viewToggle.addEventListener('click', function() {
+                imageSlider.classList.toggle('show-original');
+                this.classList.toggle('showing-original');
+                
+                if (imageSlider.classList.contains('show-original')) {
+                    this.querySelector('span').textContent = '查看雷达图';
+                } else {
+                    this.querySelector('span').textContent = '查看原始画作';
+                }
+            });
+
+            // 关闭模态框时重置状态
+            radarModal.addEventListener('hidden.bs.modal', function () {
+                const imageSlider = this.querySelector('.image-slider');
+                const viewToggle = this.querySelector('.view-toggle');
+                
+                imageSlider.classList.remove('show-original');
+                viewToggle.classList.remove('showing-original');
+                viewToggle.querySelector('span').textContent = '查看原始画作';
             });
         }
+
+        // 点赞功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化点赞数据
+            let likes = JSON.parse(localStorage.getItem('radarLikes')) || {};
+            
+            // 更新所有点赞按钮状态
+            document.querySelectorAll('.like-button').forEach(button => {
+                const id = button.getAttribute('data-id');
+                const count = likes[id] || 0;
+                button.querySelector('.like-count').textContent = count;
+                
+                if (likes[id]) {
+                    button.classList.add('liked');
+                    button.querySelector('i').classList.replace('far', 'fas');
+                }
+            });
+
+            // 添加点击事件
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 阻止事件冒泡，避免触发模态框
+                    const id = this.getAttribute('data-id');
+                    const icon = this.querySelector('i');
+                    const countElement = this.querySelector('.like-count');
+                    
+                    // 更新本地存储
+                    if (!likes[id]) {
+                        likes[id] = 1;
+                        this.classList.add('liked');
+                        icon.classList.replace('far', 'fas');
+                    } else {
+                        likes[id] += 1;
+                    }
+                    
+                    // 更新显示
+                    countElement.textContent = likes[id];
+                    localStorage.setItem('radarLikes', JSON.stringify(likes));
+                });
+            });
+        });
     </script>
 </body>
 </html> 
