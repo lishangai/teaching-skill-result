@@ -4,157 +4,550 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>教学技能分析结果</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+        }
+
         body {
             font-family: 'Microsoft YaHei', sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
         }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .section {
-            background-color: white;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
+
+        .navbar {
+            background-color: var(--primary-color);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .radar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
         }
-        .radar-item {
+
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 80px 0;
+            margin-bottom: 40px;
             text-align: center;
         }
-        .radar-item img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
+
+        .section {
+            background-color: white;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .radar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .radar-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .radar-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .radar-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .radar-item:hover img {
+            transform: scale(1.05);
+        }
+
         .radar-item p {
-            margin-top: 10px;
+            margin-top: 15px;
             font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1em;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--background-color);
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 99;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .radar-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .hero-section {
+                padding: 40px 0;
+            }
+        }
+
+        .class-info {
+            max-width: 600px;
+            margin: 30px auto 0;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .info-card {
+            text-align: center;
+            color: white;
+        }
+
+        .info-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .info-card p {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .class-info {
+                margin: 20px 15px 0;
+                padding: 15px;
+            }
+
+            .info-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .info-card p {
+                font-size: 1rem;
+            }
+        }
+
+        .section-description {
+            background-color: rgba(52, 152, 219, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-description p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .section-description ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-description li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .section-description li::before {
+            content: "•";
+            color: var(--secondary-color);
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+
+        @media (max-width: 768px) {
+            .section-description {
+                padding: 15px;
+            }
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-body img {
+            max-height: 70vh;
+            width: auto;
+            margin: 0 auto;
+        }
+
+        .modal-body h4 {
+            color: var(--primary-color);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>教学技能分析结果</h1>
-    
-    <div class="section">
-        <h2>桑葚图分析</h2>
-        <iframe src="sankey_diagram.html" width="100%" height="600px" frameborder="0"></iframe>
+    <div class="loading">
+        <div class="spinner"></div>
     </div>
 
-    <div class="section">
-        <h2>个人雷达图分析</h2>
-        <div class="radar-grid">
-            <div class="radar-item">
-                <img src="原始数据/radar_郑洋莹.png" alt="郑洋莹的雷达图">
-                <p>郑洋莹</p>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">教学技能分析</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sankey">桑葚图</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#radar">雷达图</a>
+                    </li>
+                </ul>
             </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_郑启晗.png" alt="郑启晗的雷达图">
-                <p>郑启晗</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_赵文彦.png" alt="赵文彦的雷达图">
-                <p>赵文彦</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_刘慎之.png" alt="刘慎之的雷达图">
-                <p>刘慎之</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_谢明姝.png" alt="谢明姝的雷达图">
-                <p>谢明姝</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_王灏然.png" alt="王灏然的雷达图">
-                <p>王灏然</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_吐玛尔.png" alt="吐玛尔的雷达图">
-                <p>吐玛尔</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_沈飞阳.png" alt="沈飞阳的雷达图">
-                <p>沈飞阳</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_森达尔.png" alt="森达尔的雷达图">
-                <p>森达尔</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_罗泰.png" alt="罗泰的雷达图">
-                <p>罗泰</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_罗钧芳.png" alt="罗钧芳的雷达图">
-                <p>罗钧芳</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_刘琰伟.png" alt="刘琰伟的雷达图">
-                <p>刘琰伟</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_刘柯.png" alt="刘柯的雷达图">
-                <p>刘柯</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_刘浩楠.png" alt="刘浩楠的雷达图">
-                <p>刘浩楠</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_李炘珂.png" alt="李炘珂的雷达图">
-                <p>李炘珂</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_李尚艾.png" alt="李尚艾的雷达图">
-                <p>李尚艾</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_蒋文峰.png" alt="蒋文峰的雷达图">
-                <p>蒋文峰</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_黄滢滢.png" alt="黄滢滢的雷达图">
-                <p>黄滢滢</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_胡逸凡.png" alt="胡逸凡的雷达图">
-                <p>胡逸凡</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_胡绪波.png" alt="胡绪波的雷达图">
-                <p>胡绪波</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_郭昱彤.png" alt="郭昱彤的雷达图">
-                <p>郭昱彤</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_付僇丁.png" alt="付僇丁的雷达图">
-                <p>付僇丁</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_邓茜.png" alt="邓茜的雷达图">
-                <p>邓茜</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_陈尹韵.png" alt="陈尹韵的雷达图">
-                <p>陈尹韵</p>
-            </div>
-            <div class="radar-item">
-                <img src="原始数据/radar_阿依萨娜.png" alt="阿依萨娜的雷达图">
-                <p>阿依萨娜</p>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4">教学技能分析结果</h1>
+            <p class="lead">基于数据驱动的教学能力评估与展示</p>
+            <div class="class-info mt-4">
+                <div class="info-card">
+                    <h3>华中科技大学同济医学院</h3>
+                    <p class="mb-2">基础医学2101班</p>
+                    <p class="mb-0">"你心中的教师形象"分析汇总</p>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="container">
+        <div id="sankey" class="section">
+            <h2 class="section-title">桑葚图分析</h2>
+            <div class="section-description mb-4">
+                <p>桑葚图（Sankey Diagram）是一种特殊类型的流程图，用于展示数据流动和转换过程。在本分析中，我们使用桑葚图来可视化学生对教师各项能力的评价分布。</p>
+                <p>通过桑葚图，我们可以清晰地看到：</p>
+                <ul>
+                    <li>教学能力：包括课程设计、教学方法、课堂组织等</li>
+                    <li>专业素养：包括专业知识、学术水平、研究能力等</li>
+                    <li>育人能力：包括学生指导、品德培养、价值观引导等</li>
+                    <li>职业发展：包括教学研究、专业成长、职业规划等</li>
+                    <li>社会贡献：包括学术影响、社会服务、行业贡献等</li>
+                </ul>
+                <p>这种可视化方式帮助我们更好地理解学生对教师能力的整体评价模式，为教学改进提供数据支持。</p>
+            </div>
+            <div class="ratio ratio-16x9">
+                <iframe src="sankey_diagram.html" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div id="radar" class="section">
+            <h2 class="section-title">个人雷达图分析</h2>
+            <div class="section-description mb-4">
+                <p>雷达图（Radar Chart）是一种多变量数据可视化工具，用于展示多个维度的数据。在本分析中，我们为每位同学创建了个性化的雷达图，展示其对教师各项能力的评价。</p>
+                <p>每个雷达图包含以下维度：</p>
+                <ul>
+                    <li>教学效果：包括知识传授、学习效果、课堂互动等</li>
+                    <li>创新能力：包括教学方法创新、课程设计创新、科研创新等</li>
+                    <li>沟通能力：包括表达清晰度、师生互动、答疑解惑等</li>
+                    <li>科研水平：包括学术成果、研究能力、学术影响力等</li>
+                    <li>职业成长：包括专业发展、教学改进、职业规划等</li>
+                </ul>
+                <p>通过对比不同同学的雷达图，我们可以发现：</p>
+                <ul>
+                    <li>学生对教师能力的评价差异</li>
+                    <li>教师在不同方面的优势与不足</li>
+                    <li>需要重点改进的教学领域</li>
+                </ul>
+                <p>这些分析结果将帮助教师更好地了解学生的期望，有针对性地改进教学方法。</p>
+            </div>
+            <div class="radar-grid">
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="郑洋莹" data-image="原始数据/radar_郑洋莹.png">
+                    <img src="原始数据/radar_郑洋莹.png" alt="郑洋莹的雷达图">
+                    <p>郑洋莹</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="郑启晗" data-image="原始数据/radar_郑启晗.png">
+                    <img src="原始数据/radar_郑启晗.png" alt="郑启晗的雷达图">
+                    <p>郑启晗</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="赵文彦" data-image="原始数据/radar_赵文彦.png">
+                    <img src="原始数据/radar_赵文彦.png" alt="赵文彦的雷达图">
+                    <p>赵文彦</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="刘慎之" data-image="原始数据/radar_刘慎之.png">
+                    <img src="原始数据/radar_刘慎之.png" alt="刘慎之的雷达图">
+                    <p>刘慎之</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="谢明姝" data-image="原始数据/radar_谢明姝.png">
+                    <img src="原始数据/radar_谢明姝.png" alt="谢明姝的雷达图">
+                    <p>谢明姝</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="王灏然" data-image="原始数据/radar_王灏然.png">
+                    <img src="原始数据/radar_王灏然.png" alt="王灏然的雷达图">
+                    <p>王灏然</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="吐玛尔" data-image="原始数据/radar_吐玛尔.png">
+                    <img src="原始数据/radar_吐玛尔.png" alt="吐玛尔的雷达图">
+                    <p>吐玛尔</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="沈飞阳" data-image="原始数据/radar_沈飞阳.png">
+                    <img src="原始数据/radar_沈飞阳.png" alt="沈飞阳的雷达图">
+                    <p>沈飞阳</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="森达尔" data-image="原始数据/radar_森达尔.png">
+                    <img src="原始数据/radar_森达尔.png" alt="森达尔的雷达图">
+                    <p>森达尔</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="罗泰" data-image="原始数据/radar_罗泰.png">
+                    <img src="原始数据/radar_罗泰.png" alt="罗泰的雷达图">
+                    <p>罗泰</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="罗钧芳" data-image="原始数据/radar_罗钧芳.png">
+                    <img src="原始数据/radar_罗钧芳.png" alt="罗钧芳的雷达图">
+                    <p>罗钧芳</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="刘琰伟" data-image="原始数据/radar_刘琰伟.png">
+                    <img src="原始数据/radar_刘琰伟.png" alt="刘琰伟的雷达图">
+                    <p>刘琰伟</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="刘柯" data-image="原始数据/radar_刘柯.png">
+                    <img src="原始数据/radar_刘柯.png" alt="刘柯的雷达图">
+                    <p>刘柯</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="刘浩楠" data-image="原始数据/radar_刘浩楠.png">
+                    <img src="原始数据/radar_刘浩楠.png" alt="刘浩楠的雷达图">
+                    <p>刘浩楠</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="李炘珂" data-image="原始数据/radar_李炘珂.png">
+                    <img src="原始数据/radar_李炘珂.png" alt="李炘珂的雷达图">
+                    <p>李炘珂</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="李尚艾" data-image="原始数据/radar_李尚艾.png">
+                    <img src="原始数据/radar_李尚艾.png" alt="李尚艾的雷达图">
+                    <p>李尚艾</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="蒋文峰" data-image="原始数据/radar_蒋文峰.png">
+                    <img src="原始数据/radar_蒋文峰.png" alt="蒋文峰的雷达图">
+                    <p>蒋文峰</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="黄滢滢" data-image="原始数据/radar_黄滢滢.png">
+                    <img src="原始数据/radar_黄滢滢.png" alt="黄滢滢的雷达图">
+                    <p>黄滢滢</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="胡逸凡" data-image="原始数据/radar_胡逸凡.png">
+                    <img src="原始数据/radar_胡逸凡.png" alt="胡逸凡的雷达图">
+                    <p>胡逸凡</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="胡绪波" data-image="原始数据/radar_胡绪波.png">
+                    <img src="原始数据/radar_胡绪波.png" alt="胡绪波的雷达图">
+                    <p>胡绪波</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="郭昱彤" data-image="原始数据/radar_郭昱彤.png">
+                    <img src="原始数据/radar_郭昱彤.png" alt="郭昱彤的雷达图">
+                    <p>郭昱彤</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="付僇丁" data-image="原始数据/radar_付僇丁.png">
+                    <img src="原始数据/radar_付僇丁.png" alt="付僇丁的雷达图">
+                    <p>付僇丁</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="邓茜" data-image="原始数据/radar_邓茜.png">
+                    <img src="原始数据/radar_邓茜.png" alt="邓茜的雷达图">
+                    <p>邓茜</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="陈尹韵" data-image="原始数据/radar_陈尹韵.png">
+                    <img src="原始数据/radar_陈尹韵.png" alt="陈尹韵的雷达图">
+                    <p>陈尹韵</p>
+                </div>
+                <div class="radar-item" data-bs-toggle="modal" data-bs-target="#radarModal" data-name="阿依萨娜" data-image="原始数据/radar_阿依萨娜.png">
+                    <img src="原始数据/radar_阿依萨娜.png" alt="阿依萨娜的雷达图">
+                    <p>阿依萨娜</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 雷达图放大模态框 -->
+    <div class="modal fade" id="radarModal" tabindex="-1" aria-labelledby="radarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="radarModalLabel">雷达图详情</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalRadarImage" src="" alt="" class="img-fluid">
+                    <h4 id="modalRadarName" class="mt-3"></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 加载动画
+        window.addEventListener('load', () => {
+            document.querySelector('.loading').classList.add('hidden');
+        });
+
+        // 返回顶部按钮
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 雷达图模态框处理
+        const radarModal = document.getElementById('radarModal');
+        if (radarModal) {
+            radarModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const name = button.getAttribute('data-name');
+                const image = button.getAttribute('data-image');
+                
+                const modalTitle = radarModal.querySelector('.modal-title');
+                const modalImage = radarModal.querySelector('#modalRadarImage');
+                const modalName = radarModal.querySelector('#modalRadarName');
+                
+                modalTitle.textContent = `${name}的雷达图分析`;
+                modalImage.src = image;
+                modalImage.alt = `${name}的雷达图`;
+                modalName.textContent = name;
+            });
+        }
+    </script>
 </body>
 </html> 
