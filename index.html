@@ -6,6 +6,9 @@
     <title>教师形象绘图分析</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -656,7 +659,7 @@
         }
 
         .author-header::after {
-            content: '作者信息';
+            content: '站点作者';
             position: absolute;
             top: -10px;
             left: -10px;
@@ -1265,6 +1268,71 @@
         .copy-tooltip.show {
             opacity: 1;
         }
+
+        /* 评论区域样式 */
+        .comment-section {
+            background-color: white;
+            padding: 40px;
+            margin: 30px 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .comment-title {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .comment-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 2px;
+        }
+
+        #vcomments {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #f9f9f9;
+        }
+
+        /* 自定义Valine样式 */
+        .v * {
+            font-size: 16px;
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .v .vwrap {
+            border-radius: 10px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            overflow: hidden;
+        }
+
+        .v .vbtn {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .v .vbtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -1304,7 +1372,7 @@
         <div class="author-header">
             <img src="128879635.jfif" alt="Shangai LI" class="author-avatar">
             <div>
-                <h3 class="author-name">Shangai LI</h3>
+                <h3 class="author-name">Shangai Li</h3>
             </div>
         </div>
         <div class="author-works">
@@ -1683,6 +1751,15 @@
         </div>
     </div>
 
+    <!-- 在视频区域后添加评论区 -->
+    <div class="container">
+        <div class="comment-section">
+            <h2 class="comment-title">留言评论</h2>
+            <p>在这里留下您的想法和建议，与其他人分享您的见解。</p>
+            <div id="vcomments"></div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // 加载动画
@@ -1929,44 +2006,104 @@
         // 视频数据
         const videoData = [
             {
-                title: "视频作品 1",
+                title: "视频作品 1 黄滢滢",
                 description: "AI赋能教学创新",
                 videoSrc: "视频展/ai赋能剪辑视频-黄滢滢.mp4"
             },
             {
-                title: "视频作品 2",
+                title: "视频作品 2 刘浩楠",
                 description: "以思维启迪成长",
                 videoSrc: "视频展/教育者：以思维启迪成长.mp4"
             },
             {
-                title: "视频作品 3",
+                title: "视频作品 3 胡逸凡",
                 description: "创意教学场景",
                 videoSrc: "视频展/老师头发飘扬，眨眼wink，抛飞吻，头上有天使光环，给她上个色.mp4"
             },
             {
-                title: "视频作品 4",
+                title: "视频作品 4 沈飞阳",
                 description: "教学实践展示",
                 videoSrc: "视频展/i2wt9jlxx5_20250416_17491609.mp4"
             },
             {
-                title: "视频作品 5",
+                title: "视频作品 5 邓茜",
                 description: "课堂教学片段",
                 videoSrc: "视频展/9782b947f81ccd3f41463cd9515d346d_20250416_17491465.mp4"
             },
             {
-                title: "视频作品 6",
+                title: "视频作品 6 邓茜",
                 description: "教学互动与反馈",
                 videoSrc: "视频展/4bb156751c7d24ff418ca774a4650c19_20250416_17494610.mp4"
             },
             {
-                title: "视频作品 7",
+                title: "视频作品 7 王灏然",
                 description: "教学示范课程",
                 videoSrc: "视频展/(2)_20250416_17493442.mp4"
             },
             {
-                title: "视频作品 8",
+                title: "视频作品 8 阿依萨娜",
                 description: "教学方法创新",
                 videoSrc: "视频展/10146c0889eb102b2325d586552cf2e1_20250416_17491814.mp4"
+            },
+            {
+                title: "视频作品 9 黄滢滢",
+                description: "AI技术应用",
+                videoSrc: "视频展/AI.mp4"
+            },
+            {
+                title: "视频作品 10 赵文彦",
+                description: "AI生成教学内容",
+                videoSrc: "视频展/AI生成.mp4"
+            },
+            {
+                title: "视频作品 11 胡逸凡",
+                description: "ai视频作品",
+                videoSrc: "视频展/31.mp4"
+            },
+            {
+                title: "视频作品 12 沈飞阳",
+                description: "ai视频作品",
+                videoSrc: "视频展/32.mp4"
+            },
+            {
+                title: "视频作品 13 邓茜",
+                description: "ai视频作品",
+                videoSrc: "视频展/33.mp4"
+            },
+            {
+                title: "视频作品 14 罗泰",
+                description: "ai视频作品",
+                videoSrc: "视频展/34.mp4"
+            },
+            {
+                title: "视频作品 15 罗泰",
+                description: "ai视频作品",
+                videoSrc: "视频展/35.mp4"
+            },
+            {
+                title: "视频作品 16 沈飞阳",
+                description: "ai视频作品",
+                videoSrc: "视频展/36.mp4"
+            },
+            {
+                title: "视频作品 17 解明姝",
+                description: "ai视频作品",
+                videoSrc: "视频展/37.mp4"
+            },
+            {
+                title: "视频作品 18 沈飞阳",
+                description: "ai视频作品",
+                videoSrc: "视频展/38.mp4"
+            },
+            {
+                title: "视频作品 19 吐玛尔",
+                description: "ai视频作品",
+                videoSrc: "视频展/39.mp4"
+            },
+            {
+                title: "视频作品 20 刘琰玮",
+                description: "ai视频作品",
+                videoSrc: "视频展/310.mp4"
             }
         ];
 
@@ -2095,6 +2232,24 @@
             authorToggle.addEventListener('click', function() {
                 authorPanel.classList.remove('hidden');
                 authorToggle.classList.remove('visible');
+            });
+        });
+
+        // 初始化Valine评论系统
+        document.addEventListener('DOMContentLoaded', function() {
+            new Valine({
+                el: '#vcomments',
+                appId: 's6OljuD4cx9YMv9zqCXBSErc-gzGzoHsz', // 需要替换为您的LeanCloud AppID
+                appKey: 'Cuau9TmWmAoQXk5raCpL8rr2', // 需要替换为您的LeanCloud AppKey
+                placeholder: '请输入您的评论...',
+                avatar: 'mp',
+                meta: ['nick', 'mail'],
+                pageSize: 10,
+                lang: 'zh-CN',
+                visitor: true,
+                highlight: true,
+                recordIP: true,
+                enableQQ: true
             });
         });
     </script>
