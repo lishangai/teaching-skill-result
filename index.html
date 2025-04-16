@@ -587,9 +587,62 @@
             max-width: 320px;
         }
 
-        .floating-author:hover {
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-            border-color: rgba(74, 144, 226, 0.3);
+        .floating-author.hidden {
+            transform: translateX(110%) translateY(-50%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .author-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        .author-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        .author-toggle {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .author-toggle.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .author-toggle:hover {
+            transform: translateY(-50%) scale(1.1);
         }
 
         .author-header {
@@ -1245,6 +1298,9 @@
 
     <!-- 更新悬浮作者信息组件 -->
     <div class="floating-author">
+        <div class="author-close">
+            <i class="fas fa-times"></i>
+        </div>
         <div class="author-header">
             <img src="128879635.jfif" alt="Shangai LI" class="author-avatar">
             <div>
@@ -1271,6 +1327,11 @@
                 <div class="copy-tooltip">已复制邮箱地址！</div>
             </button>
         </div>
+    </div>
+
+    <!-- 添加作者信息切换按钮 -->
+    <div class="author-toggle">
+        <i class="fas fa-user"></i>
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -2017,6 +2078,25 @@
                 console.error('复制失败:', err);
             });
         }
+
+        // 添加作者信息关闭和切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const authorPanel = document.querySelector('.floating-author');
+            const authorClose = document.querySelector('.author-close');
+            const authorToggle = document.querySelector('.author-toggle');
+            
+            // 关闭作者信息面板
+            authorClose.addEventListener('click', function() {
+                authorPanel.classList.add('hidden');
+                authorToggle.classList.add('visible');
+            });
+            
+            // 重新显示作者信息面板
+            authorToggle.addEventListener('click', function() {
+                authorPanel.classList.remove('hidden');
+                authorToggle.classList.remove('visible');
+            });
+        });
     </script>
 </body>
 </html> 
