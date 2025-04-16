@@ -1212,41 +1212,6 @@
         .copy-tooltip.show {
             opacity: 1;
         }
-
-        .video-thumbnail {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            overflow: hidden;
-        }
-        
-        .poster-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .video-info {
-            padding: 15px;
-            text-align: center;
-        }
-        
-        .video-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 8px;
-        }
-        
-        .video-description {
-            font-size: 0.9rem;
-            color: var(--text-color);
-            opacity: 0.8;
-            margin: 0;
-        }
     </style>
 </head>
 <body>
@@ -1905,50 +1870,42 @@
             {
                 title: "视频作品 1",
                 description: "AI赋能教学创新",
-                videoSrc: "视频展/ai赋能剪辑视频-黄滢滢.mp4",
-                posterSrc: "视频展/ai赋能剪辑视频-黄滢滢.png"
+                videoSrc: "视频展/ai赋能剪辑视频-黄滢滢.mp4"
             },
             {
                 title: "视频作品 2",
                 description: "以思维启迪成长",
-                videoSrc: "视频展/教育者：以思维启迪成长.mp4",
-                posterSrc: "视频展/教育者：以思维启迪成长.png"
+                videoSrc: "视频展/教育者：以思维启迪成长.mp4"
             },
             {
                 title: "视频作品 3",
                 description: "创意教学场景",
-                videoSrc: "视频展/老师头发飘扬，眨眼wink，抛飞吻，头上有天使光环，给她上个色.mp4",
-                posterSrc: "视频展/老师头发飘扬，眨眼wink，抛飞吻，头上有天使光环，给她上个色.png"
+                videoSrc: "视频展/老师头发飘扬，眨眼wink，抛飞吻，头上有天使光环，给她上个色.mp4"
             },
             {
                 title: "视频作品 4",
                 description: "教学实践展示",
-                videoSrc: "视频展/i2wt9jlxx5_20250416_17491609.mp4",
-                posterSrc: "视频展/i2wt9jlxx5_20250416_17491609.png"
+                videoSrc: "视频展/i2wt9jlxx5_20250416_17491609.mp4"
             },
             {
                 title: "视频作品 5",
                 description: "课堂教学片段",
-                videoSrc: "视频展/9782b947f81ccd3f41463cd9515d346d_20250416_17491465.mp4",
-                posterSrc: "视频展/9782b947f81ccd3f41463cd9515d346d_20250416_17491465.png"
+                videoSrc: "视频展/9782b947f81ccd3f41463cd9515d346d_20250416_17491465.mp4"
             },
             {
                 title: "视频作品 6",
                 description: "教学互动与反馈",
-                videoSrc: "视频展/4bb156751c7d24ff418ca774a4650c19_20250416_17494610.mp4",
-                posterSrc: "视频展/4bb156751c7d24ff418ca774a4650c19_20250416_17494610.png"
+                videoSrc: "视频展/4bb156751c7d24ff418ca774a4650c19_20250416_17494610.mp4"
             },
             {
                 title: "视频作品 7",
                 description: "教学示范课程",
-                videoSrc: "视频展/(2)_20250416_17493442.mp4",
-                posterSrc: "视频展/(2)_20250416_17493442.png"
+                videoSrc: "视频展/(2)_20250416_17493442.mp4"
             },
             {
                 title: "视频作品 8",
                 description: "教学方法创新",
-                videoSrc: "视频展/10146c0889eb102b2325d586552cf2e1_20250416_17491814.mp4",
-                posterSrc: "视频展/10146c0889eb102b2325d586552cf2e1_20250416_17491814.png"
+                videoSrc: "视频展/10146c0889eb102b2325d586552cf2e1_20250416_17491814.mp4"
             }
         ];
 
@@ -1957,7 +1914,9 @@
             return `
                 <div class="video-item" data-video-src="${video.videoSrc}">
                     <div class="video-thumbnail">
-                        <img src="${video.posterSrc}" alt="${video.title}" class="poster-image">
+                        <video class="thumbnail-video" preload="metadata">
+                            <source src="${video.videoSrc}" type="video/mp4">
+                        </video>
                         <div class="play-overlay">
                             <div class="play-button">
                                 <i class="fas fa-play"></i>
@@ -1974,34 +1933,25 @@
 
         // 更新视频缩略图样式
         const additionalStyles = `
-            .video-thumbnail {
-                position: relative;
-                width: 100%;
-                padding-bottom: 56.25%;
-                overflow: hidden;
-            }
-            
-            .poster-image {
+            .video-thumbnail video.thumbnail-video {
                 position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                pointer-events: none;
             }
-            
             .video-info {
                 padding: 15px;
                 text-align: center;
             }
-            
             .video-title {
                 font-size: 1.1rem;
                 font-weight: 600;
                 color: var(--primary-color);
                 margin-bottom: 8px;
             }
-            
             .video-description {
                 font-size: 0.9rem;
                 color: var(--text-color);
@@ -2019,6 +1969,11 @@
         function renderVideoGrid() {
             const videoGrid = document.querySelector('.video-grid');
             videoGrid.innerHTML = videoData.map(video => createVideoCard(video)).join('');
+            
+            // 设置视频缩略图到第一帧
+            document.querySelectorAll('.thumbnail-video').forEach(video => {
+                video.currentTime = 0.1;
+            });
         }
 
         // 页面加载完成后渲染视频
@@ -2034,26 +1989,12 @@
             const modal = new bootstrap.Modal(document.getElementById('videoModal'));
             const modalTitle = document.querySelector('#videoModal .modal-title');
             const modalVideo = document.querySelector('#videoModal video');
-            const modalSource = modalVideo.querySelector('source');
             
-            // 设置视频标题
             modalTitle.textContent = videoItem.querySelector('.video-title').textContent;
-            
-            // 设置视频源
-            modalSource.src = videoItem.dataset.videoSrc;
-            
-            // 重新加载视频
+            modalVideo.querySelector('source').src = videoItem.dataset.videoSrc;
             modalVideo.load();
             
-            // 显示模态框
             modal.show();
-            
-            // 模态框显示后自动播放视频
-            document.getElementById('videoModal').addEventListener('shown.bs.modal', function() {
-                modalVideo.play().catch(e => {
-                    console.log('自动播放失败，需要用户交互才能播放:', e);
-                });
-            }, { once: true });
         });
 
         // 关闭模态框时暂停视频
@@ -2061,12 +2002,6 @@
             const video = this.querySelector('video');
             video.pause();
             video.currentTime = 0;
-            
-            // 清除视频源，防止在后台继续加载
-            setTimeout(() => {
-                video.querySelector('source').src = '';
-                video.load();
-            }, 300);
         });
 
         // 添加复制邮箱功能
