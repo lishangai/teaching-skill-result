@@ -1212,6 +1212,49 @@
         .copy-tooltip.show {
             opacity: 1;
         }
+
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: rgba(0,0,0,0.05);
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .video-thumbnail video.thumbnail-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-thumbnail video.thumbnail-video.loaded {
+            opacity: 1;
+        }
+
+        .loading-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.05);
+        }
+
+        .loading-placeholder i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -1914,7 +1957,7 @@
             return `
                 <div class="video-item" data-video-src="${video.videoSrc}">
                     <div class="video-thumbnail">
-                        <video class="thumbnail-video" preload="metadata">
+                        <video class="thumbnail-video" preload="none" loading="lazy">
                             <source src="${video.videoSrc}" type="video/mp4">
                         </video>
                         <div class="play-overlay">
@@ -1933,6 +1976,15 @@
 
         // 更新视频缩略图样式
         const additionalStyles = `
+            .video-thumbnail {
+                position: relative;
+                width: 100%;
+                padding-bottom: 56.25%;
+                background: rgba(0,0,0,0.05);
+                overflow: hidden;
+                border-radius: 10px;
+            }
+
             .video-thumbnail video.thumbnail-video {
                 position: absolute;
                 top: 0;
@@ -1941,22 +1993,30 @@
                 height: 100%;
                 object-fit: cover;
                 pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
             }
-            .video-info {
-                padding: 15px;
-                text-align: center;
+
+            .video-thumbnail video.thumbnail-video.loaded {
+                opacity: 1;
             }
-            .video-title {
-                font-size: 1.1rem;
-                font-weight: 600;
+
+            .loading-placeholder {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(0,0,0,0.05);
+            }
+
+            .loading-placeholder i {
+                font-size: 2rem;
                 color: var(--primary-color);
-                margin-bottom: 8px;
-            }
-            .video-description {
-                font-size: 0.9rem;
-                color: var(--text-color);
-                opacity: 0.8;
-                margin: 0;
+                opacity: 0.5;
             }
         `;
 
@@ -1970,16 +2030,38 @@
             const videoGrid = document.querySelector('.video-grid');
             videoGrid.innerHTML = videoData.map(video => createVideoCard(video)).join('');
             
-            // 设置视频缩略图到第一帧
+            // 使用 Intersection Observer 实现懒加载
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const video = entry.target;
+                        if (!video.src) {
+                            video.src = video.dataset.src;
+                        }
+                        video.classList.add('loaded');
+                        observer.unobserve(video);
+                    }
+                });
+            }, {
+                rootMargin: '50px 0px',
+                threshold: 0.1
+            });
+
+            // 监听所有视频元素
             document.querySelectorAll('.thumbnail-video').forEach(video => {
-                video.currentTime = 0.1;
+                observer.observe(video);
+                
+                // 加载完成后显示视频
+                video.addEventListener('loadeddata', () => {
+                    video.classList.add('loaded');
+                });
+
+                // 设置视频到第一帧
+                video.addEventListener('loadedmetadata', () => {
+                    video.currentTime = 0.1;
+                });
             });
         }
-
-        // 页面加载完成后渲染视频
-        document.addEventListener('DOMContentLoaded', () => {
-            renderVideoGrid();
-        });
 
         // 视频播放处理
         document.querySelector('.video-grid').addEventListener('click', (e) => {
@@ -1991,17 +2073,26 @@
             const modalVideo = document.querySelector('#videoModal video');
             
             modalTitle.textContent = videoItem.querySelector('.video-title').textContent;
+            
+            // 只有在模态框显示时才加载视频
+            modal.show();
             modalVideo.querySelector('source').src = videoItem.dataset.videoSrc;
             modalVideo.load();
-            
-            modal.show();
         });
 
-        // 关闭模态框时暂停视频
+        // 关闭模态框时停止视频并释放资源
         document.getElementById('videoModal').addEventListener('hidden.bs.modal', function () {
             const video = this.querySelector('video');
             video.pause();
             video.currentTime = 0;
+            video.src = '';
+        });
+
+        // 页面加载完成后移除加载动画
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.loading').classList.add('hidden');
+            }, 500);
         });
 
         // 添加复制邮箱功能
